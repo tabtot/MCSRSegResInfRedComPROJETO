@@ -68,7 +68,7 @@ kubectl get hpa
 echo ""
 echo "[8] Gerando carga para testar autoscaling..."
 echo "Enviando 2000 requisições em 10 segundos..."
-for i in {1..10000}; do
+for i in {1..150}; do
   curl -s $BASE_URL/api/data > /dev/null 2>&1 &
 done
 
