@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logger-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logger-service
+  template:
+    metadata:
+      labels:
+        app: logger-service
+    spec:
+      containers:
+      - name: logger
+        image: logger-service:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: logs-volume
+          mountPath: /logs
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: logs-volume
+        hostPath:
+          path: /tmp/k8s-logs
+          type: DirectoryOrCreate
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logger-service
+spec:
+  selector:
+    app: logger-service
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
