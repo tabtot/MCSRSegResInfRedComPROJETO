@@ -71,6 +71,15 @@ kubectl get services
 kubectl get hpa
 ```
 
+### 8. metrics-server e Dashboard
+
+```bash
+minikube addons enable metrics-server
+```
+
+```bash
+minikube addons enable dashboard
+```
 ## 🌐 Acesso ao Sistema
 
 - **Dashboard**: http://localhost:30080
