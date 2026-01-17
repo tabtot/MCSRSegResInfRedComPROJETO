@@ -25,7 +25,7 @@ START_TIME=$(date +%s)
 
 for i in {1..30}; do
   echo "[$i/30] Sending burst of 200 requests..."
-  for j in {1..200}; do
+  for j in {1..1000}; do
     curl -s $TARGET_URL/api/data > /dev/null 2>&1 &
   done
   sleep 1

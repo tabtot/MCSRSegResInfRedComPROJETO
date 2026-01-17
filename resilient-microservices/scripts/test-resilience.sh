@@ -42,6 +42,7 @@ echo ""
 echo "[3] Simulando falha de container (deletando 1 pod do API)..."
 API_POD=$(kubectl get pods -l app=api-service -o jsonpath='{.items[0].metadata.name}')
 echo "Deletando pod: $API_POD"
+date
 kubectl delete pod $API_POD
 
 echo ""
@@ -51,7 +52,7 @@ sleep 5
 
 echo "Aguardando pod ficar ready (até 60s)..."
 kubectl wait --for=condition=ready pod -l app=api-service --timeout=60s
-
+date
 echo ""
 echo "[5] Testando disponibilidade após recuperação..."
 test_endpoint "$BASE_URL/api/data" "API Service"
@@ -66,13 +67,13 @@ kubectl get hpa
 
 echo ""
 echo "[8] Gerando carga para testar autoscaling..."
-echo "Enviando 500 requisições em 10 segundos..."
-for i in {1..500}; do
+echo "Enviando 2000 requisições em 10 segundos..."
+for i in {1..10000}; do
   curl -s $BASE_URL/api/data > /dev/null 2>&1 &
 done
 
 echo "Aguardando processamento..."
-sleep 10
+sleep 40
 
 echo ""
 echo "[9] Verificando se HPA escalou..."
