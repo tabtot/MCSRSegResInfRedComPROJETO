@@ -126,40 +126,25 @@ curl http://localhost:30080/
 ```bash
 ./scripts/test-resilience.sh
 ```
+Guardar output do teste:
+```bash
+./scripts/test-resilience.sh >> output.txt
+```
+
 
 ### Simular falha manual
 ```bash
 # Apagar um pod
 kubectl delete pod <nome-do-pod>
 
+#ou colocar réplcias a 0
+kubectl scale deployment api-service --replicas=5
+
 # Verificar recuperação automática
 kubectl get pods -w
 ```
 
-## 📈 Métricas de Resiliência
-
-### RTO (Recovery Time Objective)
-```bash
-# Tempo de recuperação após falha
-kubectl get events --sort-by='.lastTimestamp'
-```
-
-### MTTR (Mean Time To Repair)
-```bash
-# Ver tempo de restart nos logs
-kubectl describe pod <pod-name>
-```
-
-### Autoscaling em ação
-```bash
-# Gerar carga
-for i in {1..1000}; do curl http://localhost:30080/api/data & done
-
-# Observar scaling
-kubectl get hpa -w
-```
-
-## 🔍 Verificação de Requisitos
+## 🔍 Verificação
 
 ### Health Checks
 ```bash
@@ -227,7 +212,7 @@ resilient-microservices/
 ### Limpar tudo e recomeçar
 
 ```bash
-# Deletar todos os recursos
+# Apagar todos os recursos
 kubectl delete -f k8s/
 
 # Aguardar terminar
