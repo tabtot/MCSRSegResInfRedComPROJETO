@@ -39,19 +39,19 @@ echo "[2] Verificando réplicas atuais..."
 kubectl get pods -l app=api-service -o wide
 
 echo ""
-echo "[3] Simulando falha de container (deletando 1 pod do API)..."
+echo "[3] Simulando falha de container (A apagar 1 pod do API)..."
 API_POD=$(kubectl get pods -l app=api-service -o jsonpath='{.items[0].metadata.name}')
-echo "Deletando pod: $API_POD"
+echo "A apagar pod: $API_POD"
 date
 kubectl delete pod $API_POD
 
 echo ""
 echo "[4] Aguardando recuperação automática..."
 echo "O Kubernetes deve recriar o pod automaticamente..."
-sleep 5
+sleep 3
 
 echo "Aguardando pod ficar ready (até 60s)..."
-kubectl wait --for=condition=ready pod -l app=api-service --timeout=60s
+kubectl wait --for=condition=ready pod -l app=api-service --timeout=30s
 date
 echo ""
 echo "[5] Testando disponibilidade após recuperação..."
@@ -73,7 +73,7 @@ START_TIME=$(date +%s)
 
 for i in {1..15}; do
   echo "[$i/30] Sending burst of 150 requests..."
-  for j in {1..350}; do
+  for j in {1..400}; do
     curl -s $BASE_URL/api/data > /dev/null 2>&1 &
   done
   sleep 1
@@ -87,7 +87,7 @@ DURATION=$((END_TIME - START_TIME))
 echo "Ataque durou $DURATION segundos"
 
 echo "Aguardando processamento..."
-sleep 40
+sleep 20
 
 echo ""
 echo "[9] Verificando se HPA escalou..."
