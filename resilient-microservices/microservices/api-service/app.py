@@ -19,9 +19,10 @@ def send_log(level, message, extra=None):
             'pod': os.getenv('HOSTNAME', 'unknown'),
             'extra': extra or {}
         }
-        requests.post(f'{LOGGER_URL}/log', json=log_data, timeout=1)
-    except:
-        pass
+        response = requests.post(f'{LOGGER_URL}/log', json=log_data, timeout=2)
+        print(f"Log sent: {response.status_code}")  # Debug
+    except Exception as e:
+        print(f"Failed to send log: {e}")  # Debug - não falha se logger estiver down
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -39,6 +40,7 @@ def get_data():
     data = {
         'service': SERVICE_NAME,
         'timestamp': datetime.utcnow().isoformat(),
+        'pod': os.getenv('HOSTNAME', 'unknown'),
         'data': [
             {'id': 1, 'name': 'Item A', 'value': 100},
             {'id': 2, 'name': 'Item B', 'value': 200},

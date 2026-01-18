@@ -72,8 +72,8 @@ echo "Enviando 2000 requisições em 10 segundos..."
 START_TIME=$(date +%s)
 
 for i in {1..15}; do
-  echo "[$i/30] Sending burst of 150 requests..."
-  for j in {1..400}; do
+  echo "[$i/30] Sending burst of 350 requests..."
+  for j in {1..350}; do
     curl -s $BASE_URL/api/data > /dev/null 2>&1 &
   done
   sleep 1

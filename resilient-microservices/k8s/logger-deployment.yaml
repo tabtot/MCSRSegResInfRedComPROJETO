@@ -36,9 +36,7 @@ spec:
           periodSeconds: 10
       volumes:
       - name: logs-volume
-        hostPath:
-          path: /tmp/k8s-logs
-          type: DirectoryOrCreate
+        emptyDir: {}
       restartPolicy: Always
 ---
 apiVersion: v1

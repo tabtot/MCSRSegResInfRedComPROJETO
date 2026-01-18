@@ -2,16 +2,21 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir Flask==2.3.0
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY logger.py .
 
-# Criar diretório de logs
-RUN mkdir -p /logs && chmod 777 /logs
+# Criar utilizador antes de criar diretório
+RUN useradd -m -u 1000 appuser
 
-# Hardening
-RUN useradd -m -u 1000 appuser && \
-    chown -R appuser:appuser /app /logs
+# Criar diretório de logs e dar permissões completas
+RUN mkdir -p /logs && \
+    chown -R appuser:appuser /app /logs && \
+    chmod -R 755 /app && \
+    chmod -R 777 /logs
+
+# Mudar para appuser
 USER appuser
 
 EXPOSE 5000

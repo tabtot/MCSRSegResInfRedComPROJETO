@@ -42,6 +42,9 @@ else
     fi
 fi
 
+minikube addons enable metrics-server
+minikube addons enable dashboard
+
 # Criar certificados TLS
 echo "[3/7] Generating TLS certificates..."
 cd certs
